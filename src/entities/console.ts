@@ -1,4 +1,5 @@
 import { EntitySchema } from "typeorm";
+import { GameConsole } from "./gameConsole";
 
 export interface Console {
   id: string;
@@ -6,8 +7,11 @@ export interface Console {
   createdAt: Date;
   updatedAt: Date;
 }
+export interface ConsoleRelations {
+  gameConsole: GameConsole[];
+}
 
-export const ConsoleEntity = new EntitySchema<Console>({
+export const ConsoleEntity = new EntitySchema<Console & ConsoleRelations>({
   name: "Console",
   tableName: "consoles",
   columns: {
@@ -26,6 +30,13 @@ export const ConsoleEntity = new EntitySchema<Console>({
     updatedAt: {
       type: "datetime",
       updateDate: true,
+    },
+  },
+  relations: {
+    gameConsole: {
+      type: "one-to-many",
+      target: "gameConsoles",
+      inverseSide: "console",
     },
   },
 });

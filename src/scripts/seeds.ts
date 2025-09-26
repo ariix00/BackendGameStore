@@ -2,6 +2,7 @@ import { v4 as generateUUID } from "uuid";
 import { db } from "../db/data-source";
 import { Console, ConsoleEntity } from "../entities/console";
 import { Game, GameEntity } from "../entities/game";
+import { GameConsole, GameConsoleEntity } from "../entities/gameConsole";
 import { Genre, GenreEntity } from "../entities/genre";
 import { Image, ImageEntity } from "../entities/image";
 import { ProvinceEntity } from "../entities/province";
@@ -19,8 +20,12 @@ export const allSeeds = async () => {
     { name: "HOlakeas" },
   ];
   const consoles: Console[] = [
-    { name: "PS4", ...baseColumns, id: generateUUID() },
-    { name: "XBOX ONE", ...baseColumns, id: generateUUID() },
+    { name: "PS4", ...baseColumns, id: "28ce39ff-5c77-49fa-8280-44445ab31f47" },
+    {
+      name: "XBOX ONE",
+      ...baseColumns,
+      id: "d5215f66-edec-421d-adf4-1803c5839529",
+    },
     { name: "NINTENDO SWITCH", ...baseColumns, id: generateUUID() },
   ];
   const games: Game[] = [
@@ -28,7 +33,7 @@ export const allSeeds = async () => {
       name: "Persona 4",
       description: "el mejor juego de la historia",
       ...baseColumns,
-      id: generateUUID(),
+      id: "ec402ccb-be06-4804-bb0a-d71f0821100a",
     },
     {
       name: "Resident evil 4 Remake",
@@ -107,23 +112,55 @@ export const allSeeds = async () => {
       url: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRrD-w1o8t-t4njMH8Osuq1mqKWj45JbDfCaAcbP1gTgdB_S6OaFyN9kpdKK_XRsqaaj30eaXsc47Rd_EVkp9hMb8AHmnA3wWhjYD1yEbT9q3MEU8LOqkBRBg",
     },
   ];
+  const gameConsoles: GameConsole[] = [
+    {
+      consoleId: "28ce39ff-5c77-49fa-8280-44445ab31f47",
+      gameId: "ec402ccb-be06-4804-bb0a-d71f0821100a",
+      ...baseColumns,
+      id: generateUUID(),
+      price: 40000,
+      stock: 100,
+    },
+    {
+      consoleId: "d5215f66-edec-421d-adf4-1803c5839529",
+      gameId: "ec402ccb-be06-4804-bb0a-d71f0821100a",
+      ...baseColumns,
+      id: generateUUID(),
+      price: 30000,
+      stock: 10,
+    },
+  ];
   //   crear data
-  provincias.forEach(async (province) => {
+
+  // 1. Provincias
+  for (const province of provincias) {
     await db.save(ProvinceEntity, province);
-  });
-  consoles.forEach(async (console) => {
+  }
+
+  // 2. Consolas
+  for (const console of consoles) {
     await db.save(ConsoleEntity, console);
-  });
-  games.forEach(async (game) => {
+  }
+
+  // 3. Juegos
+  for (const game of games) {
     await db.save(GameEntity, game);
-  });
-  genres.forEach(async (genre) => {
+  }
+
+  // 4. Géneros
+  for (const genre of genres) {
     await db.save(GenreEntity, genre);
-  });
-  images.forEach(async (image) => {
+  }
+
+  // 5. Imágenes
+  for (const image of images) {
     await db.save(ImageEntity, image);
-  });
-  // Insertar localidades
+  }
+
+  // ⚡️ Ahora sí: 6. GameConsoles (que dependen de consoles + games)
+  for (const gameConsole of gameConsoles) {
+    await db.save(GameConsoleEntity, gameConsole);
+  }
 
   console.log("🌱 Seed insertado correctamente");
 };
