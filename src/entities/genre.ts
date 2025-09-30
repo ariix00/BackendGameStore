@@ -1,31 +1,29 @@
 import { EntitySchema } from "typeorm";
+import { baseColumnSchema } from "../utils/database/baseColumnSchema";
+import { GameGenre } from "./gameGenre";
+import { BaseEntitySchema } from "../utils/database/baseEntityInterface";
 
-export interface Genre {
-  id: string;
+export interface Genre extends BaseEntitySchema {
   name: string;
-  createdAt: Date;
-  updatedAt: Date;
+}
+export interface GenreRelations {
+  gameGenres: GameGenre[];
 }
 
-export const GenreEntity = new EntitySchema<Genre>({
+export const GenreEntity = new EntitySchema<Genre & GenreRelations>({
   name: "Genre",
   tableName: "genres",
   columns: {
-    id: {
-      type: "uuid",
-      primary: true,
-      generated: "uuid",
-    },
+    ...baseColumnSchema,
     name: {
       type: "varchar",
     },
-    createdAt: {
-      type: "datetime",
-      createDate: true,
-    },
-    updatedAt: {
-      type: "datetime",
-      updateDate: true,
+  },
+  relations: {
+    gameGenres: {
+      type: "one-to-many",
+      target: "gameGenres",
+      inverseSide: "genre",
     },
   },
 });

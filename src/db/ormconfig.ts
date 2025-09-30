@@ -7,4 +7,7 @@ export const AppDataSource = new DataSource({
   synchronize: true,
   logging: false,
   entities: allEntities,
+  extra: {
+    foreignKeys: true,
+  },
 });

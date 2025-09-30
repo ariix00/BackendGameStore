@@ -1,24 +1,23 @@
+import { UUID } from "crypto";
 import { v4 as generateUUID } from "uuid";
 import { db } from "../db/data-source";
 import { Console, ConsoleEntity } from "../entities/console";
 import { Game, GameEntity } from "../entities/game";
 import { GameConsole, GameConsoleEntity } from "../entities/gameConsole";
+import { GameGenre, GameGenreEntity } from "../entities/gameGenre";
+import { GameImage, GameImageEntity } from "../entities/gameImage";
 import { Genre, GenreEntity } from "../entities/genre";
 import { Image, ImageEntity } from "../entities/image";
-import { ProvinceEntity } from "../entities/province";
+import { User, UserEntity } from "../entities/user";
+import { PosixDate } from "../time/posix-date";
 
 export const allSeeds = async () => {
   const baseColumns = {
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdAt: new PosixDate(),
+    updatedAt: new PosixDate(),
   };
   // data
-  const provincias = [
-    { name: "Sante Fe" },
-    { name: "San Luis" },
-    { name: "Córdoba" },
-    { name: "HOlakeas" },
-  ];
+
   const consoles: Console[] = [
     { name: "PS4", ...baseColumns, id: "28ce39ff-5c77-49fa-8280-44445ab31f47" },
     {
@@ -26,7 +25,7 @@ export const allSeeds = async () => {
       ...baseColumns,
       id: "d5215f66-edec-421d-adf4-1803c5839529",
     },
-    { name: "NINTENDO SWITCH", ...baseColumns, id: generateUUID() },
+    { name: "NINTENDO SWITCH", ...baseColumns, id: generateUUID() as UUID },
   ];
   const games: Game[] = [
     {
@@ -39,75 +38,75 @@ export const allSeeds = async () => {
       name: "Resident evil 4 Remake",
       description: "el verdadero mejor juego de la historia ADA PEAK",
       ...baseColumns,
-      id: generateUUID(),
+      id: "1ecb7591-1543-4ea6-92de-e5c29bf256f0",
     },
     {
       name: "Pokémon Scarlet",
       description: "aguante gardevoir",
       ...baseColumns,
-      id: generateUUID(),
+      id: generateUUID() as UUID,
     },
   ];
   const genres: Genre[] = [
     {
-      id: generateUUID(),
+      id: "3bd18ecb-ed6a-422d-aba9-4083f1c3d3ff",
       name: "Acción",
       ...baseColumns,
     },
     {
-      id: generateUUID(),
+      id: generateUUID() as UUID,
       name: "Romance",
       ...baseColumns,
     },
     {
-      id: generateUUID(),
+      id: generateUUID() as UUID,
       name: "Estrategia",
       ...baseColumns,
     },
     {
-      id: generateUUID(),
+      id: generateUUID() as UUID,
       name: "Anime",
       ...baseColumns,
     },
     {
-      id: generateUUID(),
+      id: generateUUID() as UUID,
       name: "RPG",
       ...baseColumns,
     },
     {
-      id: generateUUID(),
+      id: generateUUID() as UUID,
       name: "Cartas",
       ...baseColumns,
     },
     {
-      id: generateUUID(),
+      id: generateUUID() as UUID,
       name: "Gacha",
       ...baseColumns,
     },
     {
-      id: generateUUID(),
+      id: generateUUID() as UUID,
       name: "+18",
       ...baseColumns,
     },
     {
-      id: generateUUID(),
+      id: generateUUID() as UUID,
       name: "Mundo abierto",
       ...baseColumns,
     },
   ];
   const images: Image[] = [
     {
-      id: generateUUID(),
+      id: "846ba770-cba3-491a-a443-0e5cc9fe0c2a",
       ...baseColumns,
       url: "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQQ_1H1E8aFaHSLc-Nmm143YT33rBYihVN_pVfshQGE7STz_f-EKjBdVZiIyGnfJBqyY8NXXEpDGG9SNly0-3L4P6h6CyepeWJp66ZJeELQAkqBtemaN8cA",
     },
     {
-      id: generateUUID(),
+      id: generateUUID() as UUID,
       ...baseColumns,
       url: "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQhG5CZYoAgoXn-V2MsCz1XHB4F9zQx3Ct97OEVA-CEQ7xVrZrKNqTabUwNOFAD9Vc_I13-rAJk_BtEU4erxcD3bsgFpPBEOFl534GzLuvp2FckR3EPzBw_2w",
     },
     {
-      id: generateUUID(),
+      id: generateUUID() as UUID,
       ...baseColumns,
       url: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRrD-w1o8t-t4njMH8Osuq1mqKWj45JbDfCaAcbP1gTgdB_S6OaFyN9kpdKK_XRsqaaj30eaXsc47Rd_EVkp9hMb8AHmnA3wWhjYD1yEbT9q3MEU8LOqkBRBg",
     },
@@ -117,7 +116,7 @@ export const allSeeds = async () => {
       consoleId: "28ce39ff-5c77-49fa-8280-44445ab31f47",
       gameId: "ec402ccb-be06-4804-bb0a-d71f0821100a",
       ...baseColumns,
-      id: generateUUID(),
+      id: generateUUID() as UUID,
       price: 40000,
       stock: 100,
     },
@@ -125,17 +124,40 @@ export const allSeeds = async () => {
       consoleId: "d5215f66-edec-421d-adf4-1803c5839529",
       gameId: "ec402ccb-be06-4804-bb0a-d71f0821100a",
       ...baseColumns,
-      id: generateUUID(),
+      id: generateUUID() as UUID,
       price: 30000,
       stock: 10,
+    },
+  ];
+  const gameGenres: GameGenre[] = [
+    {
+      genreId: "3bd18ecb-ed6a-422d-aba9-4083f1c3d3ff",
+      gameId: "1ecb7591-1543-4ea6-92de-e5c29bf256f0",
+      id: generateUUID() as UUID,
+      ...baseColumns,
+    },
+  ];
+  const gameImages: GameImage[] = [
+    {
+      imageId: "846ba770-cba3-491a-a443-0e5cc9fe0c2a",
+      gameId: "ec402ccb-be06-4804-bb0a-d71f0821100a",
+      id: generateUUID() as UUID,
+      ...baseColumns,
+    },
+  ];
+  const users: User[] = [
+    {
+      id: generateUUID() as UUID,
+      name: "Pedro",
+      lastName: "Ferraioli",
+      password: "aguanteGardevoir",
+      email: "futanarilover11037@gmail.com",
+      ...baseColumns,
     },
   ];
   //   crear data
 
   // 1. Provincias
-  for (const province of provincias) {
-    await db.save(ProvinceEntity, province);
-  }
 
   // 2. Consolas
   for (const console of consoles) {
@@ -160,6 +182,15 @@ export const allSeeds = async () => {
   // ⚡️ Ahora sí: 6. GameConsoles (que dependen de consoles + games)
   for (const gameConsole of gameConsoles) {
     await db.save(GameConsoleEntity, gameConsole);
+  }
+  for (const gameGenre of gameGenres) {
+    await db.save(GameGenreEntity, gameGenre);
+  }
+  for (const gameImage of gameImages) {
+    await db.save(GameImageEntity, gameImage);
+  }
+  for (const user of users) {
+    await db.save(UserEntity, user);
   }
 
   console.log("🌱 Seed insertado correctamente");

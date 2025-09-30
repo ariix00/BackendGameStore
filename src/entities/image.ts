@@ -1,31 +1,30 @@
 import { EntitySchema } from "typeorm";
+import { baseColumnSchema } from "../utils/database/baseColumnSchema";
+import { BaseEntitySchema } from "../utils/database/baseEntityInterface";
+import { GameImage } from "./gameImage";
 
-export interface Image {
-  id: string;
+export interface Image extends BaseEntitySchema {
   url: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-export const ImageEntity = new EntitySchema<Image>({
+export interface ImageRelations {
+  gameImages: GameImage[];
+}
+
+export const ImageEntity = new EntitySchema<Image & ImageRelations>({
   name: "Image",
   tableName: "images",
   columns: {
-    id: {
-      type: "uuid",
-      primary: true,
-      generated: "uuid",
-    },
+    ...baseColumnSchema,
     url: {
       type: "varchar",
     },
-    createdAt: {
-      type: "datetime",
-      createDate: true,
-    },
-    updatedAt: {
-      type: "datetime",
-      updateDate: true,
+  },
+  relations: {
+    gameImages: {
+      type: "one-to-many",
+      target: "gameImages",
+      inverseSide: "images",
     },
   },
 });

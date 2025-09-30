@@ -1,12 +1,11 @@
 import { EntitySchema } from "typeorm";
+import { baseColumnSchema } from "../utils/database/baseColumnSchema";
 import { GameConsole } from "./gameConsole";
+import { BaseEntitySchema } from "../utils/database/baseEntityInterface";
 
-export interface Game {
-  id: string;
+export interface Game extends BaseEntitySchema {
   name: string;
   description: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
 export interface GameRelations {
   gameConsole: GameConsole[];
@@ -16,24 +15,12 @@ export const GameEntity = new EntitySchema<Game & GameRelations>({
   name: "Game",
   tableName: "games",
   columns: {
-    id: {
-      type: "uuid",
-      primary: true,
-      generated: "uuid",
-    },
+    ...baseColumnSchema,
     name: {
       type: "varchar",
     },
     description: {
       type: "varchar",
-    },
-    createdAt: {
-      type: "datetime",
-      createDate: true,
-    },
-    updatedAt: {
-      type: "datetime",
-      updateDate: true,
     },
   },
   relations: {
