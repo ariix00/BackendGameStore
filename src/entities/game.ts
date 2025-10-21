@@ -1,14 +1,21 @@
+import { UUID } from "crypto";
 import { EntitySchema } from "typeorm";
 import { baseColumnSchema } from "../utils/database/baseColumnSchema";
-import { GameConsole } from "./gameConsole";
 import { BaseEntitySchema } from "../utils/database/baseEntityInterface";
+import { GameGenre } from "./gameGenre";
+import { GameImage } from "./gameImage";
 
 export interface Game extends BaseEntitySchema {
   name: string;
   description: string;
+  price: number;
+  stock: number;
+  consoleId: UUID;
 }
 export interface GameRelations {
-  gameConsole: GameConsole[];
+  gameImages: GameImage[];
+  gameGenres: GameGenre[];
+  console: Console;
 }
 
 export const GameEntity = new EntitySchema<Game & GameRelations>({
@@ -22,11 +29,30 @@ export const GameEntity = new EntitySchema<Game & GameRelations>({
     description: {
       type: "varchar",
     },
+    price: {
+      type: "varchar",
+    },
+    stock: {
+      type: "varchar",
+    },
+    consoleId: {
+      type: "uuid",
+    },
   },
   relations: {
-    gameConsole: {
+    gameImages: {
       type: "one-to-many",
-      target: "gameConsoles",
+      target: "GameImage",
+      inverseSide: "game",
+    },
+    gameGenres: {
+      type: "one-to-many",
+      target: "GameGenre",
+      inverseSide: "game",
+    },
+    console: {
+      type: "many-to-one",
+      target: "Console",
       inverseSide: "game",
     },
   },

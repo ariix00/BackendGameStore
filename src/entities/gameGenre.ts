@@ -1,3 +1,4 @@
+import { UUID } from "crypto";
 import { EntitySchema } from "typeorm";
 import { baseColumnSchema } from "../utils/database/baseColumnSchema";
 import { BaseEntitySchema } from "../utils/database/baseEntityInterface";
@@ -5,10 +6,9 @@ import { Game } from "./game";
 import { Genre } from "./genre";
 
 export interface GameGenre extends BaseEntitySchema {
-  gameId: string;
+  gameId: UUID;
   genreId: string;
 }
-
 export interface GameGenreRelations {
   game: Game;
   genre: Genre;

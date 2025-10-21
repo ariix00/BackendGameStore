@@ -31,6 +31,7 @@ export const createConsole = async (req: Request, res: Response) => {
       createdAt: new PosixDate(),
       updatedAt: new PosixDate(),
       id: generateUUID() as UUID,
+      platformId: generateUUID() as UUID,
     };
     console.log(newConsole);
     await db.save(ConsoleEntity, newConsole);

@@ -1,13 +1,17 @@
+import { UUID } from "crypto";
 import { EntitySchema } from "typeorm";
 import { baseColumnSchema } from "../utils/database/baseColumnSchema";
 import { BaseEntitySchema } from "../utils/database/baseEntityInterface";
-import { GameConsole } from "./gameConsole";
+import { Game } from "./game";
+import { Platform } from "./platform";
 
 export interface Console extends BaseEntitySchema {
   name: string;
+  platformId: UUID;
 }
 export interface ConsoleRelations {
-  gameConsole: GameConsole[];
+  platform: Platform;
+  games: Game[];
 }
 
 export const ConsoleEntity = new EntitySchema<Console & ConsoleRelations>({
@@ -19,13 +23,20 @@ export const ConsoleEntity = new EntitySchema<Console & ConsoleRelations>({
     name: {
       type: "varchar",
     },
+    platformId: {
+      type: "uuid",
+    },
   },
   relations: {
-    gameConsole: {
+    platform: {
+      type: "many-to-one",
+      target: "Platform",
+      inverseSide: "consoles",
+    },
+    games: {
       type: "one-to-many",
-      target: "gameConsoles",
+      target: "Game",
       inverseSide: "console",
-      onDelete: "CASCADE",
     },
   },
 });

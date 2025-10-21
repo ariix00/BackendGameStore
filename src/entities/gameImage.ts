@@ -1,14 +1,14 @@
+import { UUID } from "crypto";
 import { EntitySchema } from "typeorm";
 import { baseColumnSchema } from "../utils/database/baseColumnSchema";
+import { BaseEntitySchema } from "../utils/database/baseEntityInterface";
 import { Game } from "./game";
 import { Image } from "./image";
-import { BaseEntitySchema } from "../utils/database/baseEntityInterface";
 
 export interface GameImage extends BaseEntitySchema {
-  gameId: string;
-  imageId: string;
+  gameId: UUID;
+  imageId: UUID;
 }
-
 export interface GameImageRelations {
   game: Game;
   image: Image;
@@ -30,17 +30,19 @@ export const GameImageEntity = new EntitySchema<GameImage & GameImageRelations>(
     relations: {
       image: {
         type: "many-to-one",
-        target: "images",
+        target: "Image",
         joinColumn: {
           name: "imageId",
         },
+        inverseSide: "gameImages",
       },
       game: {
         type: "many-to-one",
-        target: "games",
+        target: "Game",
         joinColumn: {
           name: "gameId",
         },
+        inverseSide: "gameImages",
       },
     },
   }
