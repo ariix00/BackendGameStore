@@ -67,25 +67,58 @@ export const getLatestGameData = async (req: Request, res: Response) => {
 export const getGamesByPlatform = async (req: Request, res: Response) => {
   try {
     const platformQuery = req.query.platformQuery as string;
-    console.log(platformQuery);
+    let genresQuery = req.query.genresQuery as string[] | string | undefined;
+    let pricesQuery = req.query.pricesQuery as number[] | undefined;
+    if (!genresQuery) {
+      genresQuery = undefined;
+    } else {
+      if (typeof genresQuery === "string") {
+        genresQuery = [genresQuery];
+      }
+    }
 
+    console.log("platforms:", platformQuery);
+    console.log("genres:", genresQuery);
+    console.log("prices:", pricesQuery);
     const platform = await db.findOne(PlatformEntity, {
       where: { name: platformQuery },
     });
-    console.log(platform);
     if (!platform) return res.status(400).json({ error: "Platform not found" });
-    console.log(platform.id);
     const consoles = await db.find(ConsoleEntity, {
       where: { platformId: platform.id },
     });
-    console.log(consoles);
     if (!consoles) return res.status(400).json({ error: "Consoles not found" });
 
     const gamesbyConsole = await Promise.all(
       consoles.map(async (c) => {
-        const gameConsole = await db.find(GameEntity, {
-          where: { consoleId: c.id },
-        });
+        const query = db
+          .getRepository(GameEntity)
+          .createQueryBuilder("game")
+          .leftJoin("game.gameGenres", "gameGenre")
+          .leftJoin("gameGenre.genre", "genre")
+          .where("game.consoleId = :consoleId", { consoleId: c.id });
+        if (genresQuery) {
+          if (genresQuery.length > 0) {
+            genresQuery.forEach((genre) => {
+              query.andWhere("genre.name == :genre", { genre });
+            });
+          } else {
+            query.andWhere("1=1");
+          }
+        } else {
+          query.andWhere("1=1");
+        }
+        if (pricesQuery && pricesQuery[1] != 0 && pricesQuery[0] != 0) {
+          query.andWhere("game.price BETWEEN :minPrice AND :maxPrice", {
+            minPrice: pricesQuery[0],
+            maxPrice: pricesQuery[1],
+          });
+        }
+        const gameConsole = await query.getMany();
+        // const gameConsole = await db.find(GameEntity, {
+        //   where: { consoleId: c.id },
+        // });
+
         const games = await Promise.all(
           gameConsole.map(async (gc) => {
             const image = await db
