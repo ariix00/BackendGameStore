@@ -69,6 +69,7 @@ export const getGamesByPlatform = async (req: Request, res: Response) => {
     const platformQuery = req.query.platformQuery as string;
     let genresQuery = req.query.genresQuery as string[] | string | undefined;
     let pricesQuery = req.query.pricesQuery as number[] | undefined;
+    let consolesQuery = req.query.consolesQuery as string | undefined;
     if (!genresQuery) {
       genresQuery = undefined;
     } else {
@@ -96,6 +97,7 @@ export const getGamesByPlatform = async (req: Request, res: Response) => {
           .createQueryBuilder("game")
           .leftJoin("game.gameGenres", "gameGenre")
           .leftJoin("gameGenre.genre", "genre")
+          .leftJoin("game.console", "console")
           .where("game.consoleId = :consoleId", { consoleId: c.id });
         if (genresQuery) {
           if (genresQuery.length > 0) {
@@ -112,6 +114,11 @@ export const getGamesByPlatform = async (req: Request, res: Response) => {
           query.andWhere("game.price BETWEEN :minPrice AND :maxPrice", {
             minPrice: pricesQuery[0],
             maxPrice: pricesQuery[1],
+          });
+        }
+        if (consolesQuery) {
+          query.andWhere("console.name == :consoleName", {
+            consoleName: consolesQuery,
           });
         }
         const gameConsole = await query.getMany();

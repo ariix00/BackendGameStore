@@ -29,6 +29,8 @@ export const allSeeds = async () => {
   const persona5Id = generateUUID() as UUID;
   const re4Id = generateUUID() as UUID;
   const consolePs4Id = generateUUID() as UUID;
+  const consolePs5Id = generateUUID() as UUID;
+
   const consoleXboxOneId = generateUUID() as UUID;
   const consoleNintendoSwitchId = generateUUID() as UUID;
 
@@ -57,6 +59,12 @@ export const allSeeds = async () => {
       name: "PS4",
       ...baseColumns,
       id: consolePs4Id,
+      platformId: playStationId,
+    },
+    {
+      name: "PS5",
+      ...baseColumns,
+      id: consolePs5Id,
       platformId: playStationId,
     },
     {
