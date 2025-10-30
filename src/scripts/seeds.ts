@@ -10,15 +10,12 @@ import { Image, ImageEntity, ImageType } from "../entities/image";
 import { Platform, PlatformEntity } from "../entities/platform";
 import { User, UserEntity } from "../entities/user";
 import { PosixDate } from "../time/posix-date";
+import { baseColumns } from "../utils/database/baseColumn";
 
 export const allSeeds = async () => {
   const today = new PosixDate(); // fecha actual
   const oneDay = 24 * 60 * 60 * 1000; // milisegundos en un día
 
-  const baseColumns = {
-    createdAt: new PosixDate(),
-    updatedAt: new PosixDate(),
-  };
   // data
   const playStationId = generateUUID() as UUID;
   const xboxId = generateUUID() as UUID;
@@ -26,11 +23,25 @@ export const allSeeds = async () => {
   const genreActionId = generateUUID() as UUID;
   const genreAnimeId = generateUUID() as UUID;
   const genreRPGId = generateUUID() as UUID;
+
   const persona5Id = generateUUID() as UUID;
   const re4Id = generateUUID() as UUID;
+  const shadowOfColossusId = generateUUID() as UUID;
+  const minecraftId = generateUUID() as UUID;
+  const wwe2k15Id = generateUUID() as UUID;
+
+  const zelda = generateUUID() as UUID;
+  const pokemonScarlettId = generateUUID() as UUID;
+  const pokemonDiamondId = generateUUID() as UUID;
+  const marioKartId = generateUUID() as UUID;
+
+  const gtaVId = generateUUID() as UUID;
+  const haloId = generateUUID() as UUID;
+  const battleFieldId = generateUUID() as UUID;
+  const farCryId = generateUUID() as UUID;
+
   const consolePs4Id = generateUUID() as UUID;
   const consolePs5Id = generateUUID() as UUID;
-
   const consoleXboxOneId = generateUUID() as UUID;
   const consoleNintendoSwitchId = generateUUID() as UUID;
 
@@ -189,6 +200,12 @@ export const allSeeds = async () => {
       url: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Persona_5_logo.svg/1200px-Persona_5_logo.svg.png",
       type: ImageType.TITLE,
     },
+    {
+      id: "ffe00ed8-c0b5-451a-b341-25b480e2132e",
+      ...baseColumns,
+      url: "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQhG5CZYoAgoXn-V2MsCz1XHB4F9zQx3Ct97OEVA-CEQ7xVrZrKNqTabUwNOFAD9Vc_I13-rAJk_BtEU4erxcD3bsgFpPBEOFl534GzLuvp2FckR3EPzBw_2w",
+      type: ImageType.PRIMARY,
+    },
   ];
 
   const gameGenres: GameGenre[] = [
@@ -239,6 +256,12 @@ export const allSeeds = async () => {
     {
       imageId: "d2893ccd-7353-4419-b49d-0d68e70cd50e",
       gameId: "14d8aa18-70a4-46e6-9cc4-9c13b4f92a56",
+      id: generateUUID() as UUID,
+      ...baseColumns,
+    },
+    {
+      imageId: "ffe00ed8-c0b5-451a-b341-25b480e2132e",
+      gameId: re4Id,
       id: generateUUID() as UUID,
       ...baseColumns,
     },
