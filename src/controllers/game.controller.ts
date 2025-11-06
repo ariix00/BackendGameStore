@@ -4,7 +4,6 @@ import { db } from "../db/data-source";
 import { ConsoleEntity } from "../entities/console";
 import { GameEntity } from "../entities/game";
 import { GameGenreEntity } from "../entities/gameGenre";
-import { GameImageEntity } from "../entities/gameImage";
 import { ImageEntity } from "../entities/image";
 import { PlatformEntity } from "../entities/platform";
 
@@ -16,12 +15,11 @@ export const getLatestGameData = async (req: Request, res: Response) => {
   if (!latestGame)
     return res.status(400).json({ error: "game could not be found" });
 
-  const images = await db.find(GameImageEntity, {
+  const images = await db.find(ImageEntity, {
     where: { gameId: latestGame.id },
-    relations: ["image"],
   });
   const newImages = images.map((image) => {
-    return { url: image.image.url, type: image.image.type };
+    return { url: image.url, type: image.type };
   });
   const data1 = {
     id: latestGame.id,
@@ -42,8 +40,7 @@ export const getLatestGameData = async (req: Request, res: Response) => {
       const image = await db
         .getRepository(ImageEntity)
         .createQueryBuilder("image")
-        .leftJoin("image.gameImages", "gameImage")
-        .where("gameImage.gameId = :gameId", { gameId: gc.id })
+        .where("image.gameId = :gameId", { gameId: gc.id })
         .andWhere("image.type = :type", { type: "primary" })
         .getOne();
 
@@ -131,8 +128,7 @@ export const getGamesByPlatform = async (req: Request, res: Response) => {
             const image = await db
               .getRepository(ImageEntity)
               .createQueryBuilder("image")
-              .leftJoin("image.gameImages", "gameImage")
-              .where("gameImage.gameId = :gameId", { gameId: gc.id })
+              .where("image.gameId = :gameId", { gameId: gc.id })
               .andWhere("image.type = :type", { type: "primary" })
               .getOne();
 
@@ -167,12 +163,11 @@ export const getGameById = async (req: Request, res: Response) => {
     if (!game)
       return res.status(400).json({ error: "game could not be found" });
 
-    const images = await db.find(GameImageEntity, {
+    const images = await db.find(ImageEntity, {
       where: { gameId: game.id },
-      relations: ["image"],
     });
     const gameImages = images.map((image) => {
-      return { url: image.image.url, type: image.image.type };
+      return { url: image.url, type: image.type };
     });
     const genres = await db.find(GameGenreEntity, {
       where: {

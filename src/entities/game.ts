@@ -3,7 +3,7 @@ import { EntitySchema } from "typeorm";
 import { baseColumnSchema } from "../utils/database/baseColumnSchema";
 import { BaseEntitySchema } from "../utils/database/baseEntityInterface";
 import { GameGenre } from "./gameGenre";
-import { GameImage } from "./gameImage";
+import { Image } from "./image";
 
 export interface Game extends BaseEntitySchema {
   name: string;
@@ -13,7 +13,7 @@ export interface Game extends BaseEntitySchema {
   consoleId: UUID;
 }
 export interface GameRelations {
-  gameImages: GameImage[];
+  images: Image[];
   gameGenres: GameGenre[];
   console: Console;
 }
@@ -40,9 +40,9 @@ export const GameEntity = new EntitySchema<Game & GameRelations>({
     },
   },
   relations: {
-    gameImages: {
+    images: {
       type: "one-to-many",
-      target: "GameImage",
+      target: "Image",
       inverseSide: "game",
     },
     gameGenres: {
