@@ -1,16 +1,20 @@
 import { Router } from "express";
+import { validateSchema } from "../entities/middleware/validateSchema";
 import {
   getGameById,
   getGamesByPlatform,
+  GetGamesByPlatformSchema,
   getLatestGameData,
-} from "../controllers/game.controller";
-import { getGenres } from "../controllers/genre.controller";
+} from "../use-cases";
 
 const router = Router();
 
 router.get("/getLatestGame", getLatestGameData);
-router.get("/getGamesByPlatform", getGamesByPlatform);
+router.get(
+  "/getGamesByPlatform/:platform",
+  validateSchema(GetGamesByPlatformSchema),
+  getGamesByPlatform
+);
 router.get("/getGameById/:id", getGameById);
-router.get("/getGenres", getGenres);
 
 export default router;

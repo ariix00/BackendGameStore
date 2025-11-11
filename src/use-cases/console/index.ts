@@ -1,9 +1,9 @@
 import { UUID } from "crypto";
 import { Request, Response } from "express";
 import { v4 as generateUUID } from "uuid";
-import { db } from "../db/data-source";
-import { Console, ConsoleEntity } from "../entities/console";
-import { PosixDate } from "../time/posix-date";
+import { db } from "../../db/data-source";
+import { Console, ConsoleEntity } from "../../entities/console";
+import { PosixDate } from "../../time/posix-date";
 
 export const getAllConsoles = async (req: Request, res: Response) => {
   const consoles = await db.find(ConsoleEntity);

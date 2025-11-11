@@ -4,7 +4,7 @@ import {
   deleteConsole,
   getAllConsoles,
   updateConsole,
-} from "../controllers/console.controller";
+} from "../use-cases";
 
 const router = Router();
 
