@@ -1,4 +1,5 @@
 import console from "console";
+import { UUID } from "crypto";
 import { Request, Response } from "express";
 import z from "zod";
 import { db } from "../../db/data-source";
@@ -26,7 +27,22 @@ export const GetGamesByPlatformSchema = z.object({
     platform: z.string("debe ser string"),
   }),
 });
-
+export interface GetGamesByPlatformResponse {
+  message: string;
+  response:
+    | {
+        consoleId: UUID;
+        consoleName: string;
+        games: {
+          name: string;
+          description: string;
+          price: number;
+          imageUrl: string;
+          id: UUID;
+        }[];
+      }[]
+    | Error;
+}
 export type GetGamesByPlatformRequest = z.infer<
   typeof GetGamesByPlatformSchema
 >;
@@ -73,7 +89,7 @@ export const getGamesByPlatform = async (req: Request, res: Response) => {
         } else {
           query.andWhere("1=1");
         }
-        if (pricesQuery && pricesQuery[1] != 0 && pricesQuery[0] != 0) {
+        if (pricesQuery && pricesQuery[1] && pricesQuery[0]) {
           query.andWhere("game.price BETWEEN :minPrice AND :maxPrice", {
             minPrice: pricesQuery[0],
             maxPrice: pricesQuery[1],
@@ -97,12 +113,19 @@ export const getGamesByPlatform = async (req: Request, res: Response) => {
               .where("image.gameId = :gameId", { gameId: gc.id })
               .andWhere("image.type = :type", { type: "primary" })
               .getOne();
-
+            if (!image) {
+              const response: GetGamesByPlatformResponse = {
+                message: "something went wrong, try again later :/",
+                response: new Error("something went wrong, try again later :/"),
+              };
+              res.json("image not found :/");
+              throw new Error();
+            }
             return {
               name: gc.name,
               description: gc.description,
               price: gc.price,
-              imageUrl: image?.url,
+              imageUrl: image.url,
               id: gc.id,
             };
           })
@@ -115,6 +138,10 @@ export const getGamesByPlatform = async (req: Request, res: Response) => {
       })
     );
     console.log(gamesbyConsole);
+    const response: GetGamesByPlatformResponse = {
+      message: "enviado con exito",
+      response: gamesbyConsole,
+    };
     res.json(gamesbyConsole);
   } catch (error) {
     console.error(error);
