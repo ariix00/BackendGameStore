@@ -22,6 +22,7 @@ export const GetGamesByPlatformSchema = z.object({
     }, z.array(z.number()).optional()),
 
     consoleQuery: z.string("debe ser un string").optional(),
+    searchQuery: z.string("debe ser un string").optional(),
   }),
   params: z.object({
     platform: z.string("debe ser string"),
@@ -56,10 +57,12 @@ export const getGamesByPlatform = async (req: Request, res: Response) => {
     let genresQuery = query.genresQuery;
     let pricesQuery = query.pricesQuery;
     let consolesQuery = query.consoleQuery;
+    let searchQuery = query.searchQuery;
 
     console.log("platforms:", platformQuery);
     console.log("genres:", genresQuery);
     console.log("prices:", pricesQuery);
+    console.log("search:", searchQuery);
     const platform = await db.findOne(PlatformEntity, {
       where: { name: platformQuery },
     });
@@ -96,8 +99,13 @@ export const getGamesByPlatform = async (req: Request, res: Response) => {
           });
         }
         if (consolesQuery) {
-          query.andWhere("console.name == :consoleName", {
+          query.andWhere("console.name = :consoleName", {
             consoleName: consolesQuery,
+          });
+        }
+        if (searchQuery) {
+          query.andWhere("game.name LIKE :name", {
+            name: `%${searchQuery.toLowerCase()}%`,
           });
         }
         const gameConsole = await query.getMany();
